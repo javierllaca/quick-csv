@@ -1,0 +1,76 @@
+<project name="QuickCSV" basedir="." default="main">
+
+    <!--Properties-->
+
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="${build.dir}/jar"/>
+    <property name="main-class"  value="gui.Main"/>
+    <property name="lib.dir"     value="lib"/>
+    <property name="test.dir"    value="src"/>
+
+
+    <!--Paths-->
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
+
+
+    <!--Targets-->
+
+    <target name="main" depends="clean,run"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false">
+            <exclude name="**/gui/*.java"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java fork="true" classname="${main-class}">
+            <classpath>
+                <path refid="classpath"/>
+                <path refid="application"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="junit" depends="jar">
+        <junit printsummary="yes">
+            <!--Verbose JUnit output-->
+            <formatter type="plain" usefile="false"/>
+
+            <classpath>
+                <path refid="classpath"/>
+                <path refid="application"/>
+            </classpath>
+
+            <batchtest fork="yes">
+                <fileset dir="${test.dir}">
+                    <include name="**/test/*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
