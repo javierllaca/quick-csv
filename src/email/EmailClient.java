@@ -2,7 +2,6 @@ package email;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -46,3 +45,4 @@ public class EmailClient {
     Transport.send(msg);
   }
 }
+
