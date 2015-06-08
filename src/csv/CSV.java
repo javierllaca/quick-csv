@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.io.BufferedWriter;
+import java.io.IOException;
 
 import java.nio.charset.Charset;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -21,49 +23,37 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Wrapper class for Apache Commons CSV objects 
+ * ArrayList allows records to be accessed in O(1) time.
  *
  * @author Javier Llaca
  */
 public class CSV {
 
   private Set<String> header;
-
-  /**
-   * Instantiated as an ArrayList for fast indexed retrieval
-   */
   private List<CSVRecord> records;
 
-  public CSV(String csv) {
-    try {
-      CSVParser parser = CSVParser.parse(
-          csv,
-          CSVFormat.EXCEL.withHeader());
-      this.header = parser.getHeaderMap().keySet();
-      this.records = parser.getRecords();
-      parser.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public CSV(CSVParser parser) throws IOException {
+    this.header = parser.getHeaderMap().keySet();
+    this.records = parser.getRecords();
+    parser.close();
   }
 
-  public CSV(File file) {
-    try {
-      CSVParser parser = CSVParser.parse(
+  public CSV(String csv) throws IOException {
+    this(CSVParser.parse(
+          csv,
+          CSVFormat.EXCEL.withHeader()));
+  }
+
+  public CSV(File file) throws IOException {
+    this(CSVParser.parse(
           file,
           Charset.defaultCharset(),
-          CSVFormat.EXCEL.withHeader());
-      this.header = parser.getHeaderMap().keySet();
-      this.records = parser.getRecords();
-      parser.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+          CSVFormat.EXCEL.withHeader()));
   }
 
-  public void addRecord(int position, String... values) {
+  public void addRecord(int position, String record) {
     try {
       String header = StringUtils.join(this.header, ',');
-      String record = StringUtils.join(values, ',');
       CSVParser parser = CSVParser.parse(
           header + "\n" + record,
           CSVFormat.EXCEL.withHeader());
@@ -75,9 +65,27 @@ public class CSV {
       e.printStackTrace();
     }
   }
+  public void addRecord(int position, List<String> values) {
+    this.addRecord(position, StringUtils.join(values, ','));
+  }
+
+  public void addRecord(int position) {
+    this.addRecord(position, StringUtils.repeat("", ",", this.header.size()));
+  }
+
+  public void addRecord(int position, String... values) {
+    this.addRecord(position, Arrays.asList(values));
+  }
 
   public void deleteRecord(int position) {
     this.records.remove(position);
+  }
+
+  public void updateRecord(int position, int field, String value) {
+    List<String> values = recordValues(this.records.get(position));
+    values.set(field, value);
+    this.deleteRecord(position);
+    this.addRecord(position, values);
   }
 
   /**
@@ -115,18 +123,52 @@ public class CSV {
     return header.toString();
   }
 
+  public boolean isEmpty() {
+    return this.records.isEmpty();
+  }
+
   public String toString() {
     StringBuilder s = new StringBuilder(StringUtils.join(this.header, ','));
     for (CSVRecord record : this.records) {
       s.append("\n");
-      for (int i = 0; i < record.size() - 1; i++) {
-        s.append(record.get(i));
-        s.append(',');
-      }
-      if (record.size() > 0) {
-        s.append(record.get(record.size() - 1));
-      }
+      s.append(StringUtils.join(recordValues(record), ','));
     }
     return s.toString();
+  }
+
+  public String toHtmlString() {
+    StringBuilder s = new StringBuilder("<table cellpadding=\"5\">\n");
+
+    // Header
+    s.append("\t<tr bgcolor=\"#F1F1F1\">\n");
+    for (String field : this.header) {
+      s.append("\t\t<td>");
+      s.append(field);
+      s.append("</td>\n");
+    }
+    s.append("\t</tr>\n");
+
+    // Records
+    for (CSVRecord record : this.records) {
+      s.append("\t<tr>\n");
+      for (String field : record) {
+        s.append("\t\t<td>");
+        s.append(field);
+        s.append("</td>\n");
+      }
+      s.append("\t</tr>\n");
+    }
+
+    s.append("</table>\n");
+
+    return s.toString();
+  }
+
+  public static List<String> recordValues(CSVRecord record) {
+    List<String> values = new LinkedList<>();
+    for (String value : record) {
+      values.add(value);
+    }
+    return values;
   }
 }
