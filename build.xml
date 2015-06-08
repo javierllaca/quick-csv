@@ -6,7 +6,7 @@
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
-    <property name="main-class"  value="gui.Main"/>
+    <property name="main-class"  value="gui.QuickCSV"/>
     <property name="lib.dir"     value="lib"/>
     <property name="test.dir"    value="src"/>
 
@@ -32,9 +32,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false">
-            <exclude name="**/gui/*.java"/>
-        </javac>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false"/>
     </target>
 
     <target name="jar" depends="compile">
