@@ -58,6 +58,9 @@ public class TableView extends JFrame {
     menu.add(menuItem);
 
     menuItem = new JMenuItem("Email");
+    menuItem.addActionListener(
+        new EmailDialogListener(
+          table));
     menu.add(menuItem);
 
     menuBar.add(menu);
