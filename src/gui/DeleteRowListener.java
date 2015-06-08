@@ -17,9 +17,11 @@ public class DeleteRowListener implements ActionListener {
     CSVTableModel model = (CSVTableModel) this.table.getModel();
     int[] selectedRows = this.table.getSelectedRows();
     for (int i = 0; i < selectedRows.length; i++) {
-      model.deleteRow(selectedRows[i]);
-      for (int j = i + 1; j < selectedRows.length; j++) {
-        selectedRows[j]--;
+      if (model.getRowCount() > 1) {
+        model.deleteRow(selectedRows[i]);
+        for (int j = i + 1; j < selectedRows.length; j++) {
+          selectedRows[j]--;
+        }
       }
     }
     this.table.updateUI();

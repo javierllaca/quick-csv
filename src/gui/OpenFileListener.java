@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.JTable;
-import javax.swing.table.TableModel;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -22,6 +21,7 @@ public class OpenFileListener implements ActionListener {
 
   public void actionPerformed(ActionEvent event) {
     JFileChooser chooser = new JFileChooser();
+    chooser.setAcceptAllFileFilterUsed(false);
     chooser.setFileFilter(
         new FileNameExtensionFilter(
           "CSV Files",

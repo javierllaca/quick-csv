@@ -54,10 +54,14 @@ public class TableView extends JFrame {
           parent));
     menu.add(menuItem);
 
-    menuItem = new JMenuItem("Save");
+    menuItem = new JMenuItem("Save As");
+    menuItem.addActionListener(
+        new SaveFileListener(
+          ((CSVTableModel) table.getModel()).getCSV(),
+          parent));
     menu.add(menuItem);
 
-    menuItem = new JMenuItem("Email");
+    menuItem = new JMenuItem("Send Email");
     menuItem.addActionListener(
         new EmailDialogListener(
           table));
