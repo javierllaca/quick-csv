@@ -120,17 +120,13 @@ public class CSV {
     return values;
   }
 
-  public void writeToFile(String path) {
-    try {
-      CSVPrinter printer = new CSVPrinter(
-          new FileWriter(new File(path)),
-          CSVFormat.EXCEL);
-      printer.printRecord(this.header);
-      printer.printRecords(this.records);
-      printer.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public void writeToFile(String path) throws IOException {
+    CSVPrinter printer = new CSVPrinter(
+        new FileWriter(new File(path)),
+        CSVFormat.EXCEL);
+    printer.printRecord(this.header);
+    printer.printRecords(this.records);
+    printer.close();
   }
 
   public String headerString() {
