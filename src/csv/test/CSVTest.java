@@ -27,6 +27,19 @@ public class CSVTest {
   }
 
   @Test
+  public void emptyConstructor() {
+    try {
+      csv = new CSV(5, 1);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    assertEquals(
+        "1,2,3,4,5\n" +
+        ",,,,",
+        csv.toString());
+  }
+
+  @Test
   public void colValues() {
     try {
       csv = new CSV(csvString);

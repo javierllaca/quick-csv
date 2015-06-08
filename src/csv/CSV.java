@@ -1,39 +1,43 @@
 package csv;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileOutputStream;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-
 import java.nio.charset.Charset;
-
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Wrapper class for Apache Commons CSV objects 
- * ArrayList allows records to be accessed in O(1) time.
- *
- * @author Javier Llaca
- */
 public class CSV {
 
-  private Set<String> header;
+  private List<String> header;
   private List<CSVRecord> records;
 
+  private static List<String> defaultHeader(int n) {
+    List<String> header = new ArrayList<>();
+    for (char c = 'A'; n > 0 && c < 'Z'; c++, n--) {
+      header.add(Character.toString(c));
+    }
+    return header;
+  }
+
+  public CSV(int m, int n) {
+    this.header = defaultHeader(m);
+    this.records = new ArrayList<>();
+    for (int i = 0; i < n; i++) {
+      this.addRecord();
+    }
+  }
+
   public CSV(CSVParser parser) throws IOException {
-    this.header = parser.getHeaderMap().keySet();
+    this.header = new ArrayList<>(parser.getHeaderMap().keySet());
     this.records = parser.getRecords();
     parser.close();
   }
@@ -49,6 +53,22 @@ public class CSV {
           file,
           Charset.defaultCharset(),
           CSVFormat.EXCEL.withHeader()));
+  }
+
+  public String get(int i, int j) {
+    return this.records.get(i).get(j);
+  }
+
+  public List<String> getHeader() {
+    return this.header;
+  }
+
+  public int rowCount() {
+    return this.records.size();
+  }
+
+  public int colCount() {
+    return this.header.size();
   }
 
   public void addRecord(int position, String record) {
@@ -67,6 +87,10 @@ public class CSV {
   }
   public void addRecord(int position, List<String> values) {
     this.addRecord(position, StringUtils.join(values, ','));
+  }
+
+  public void addRecord() {
+    this.addRecord(0);
   }
 
   public void addRecord(int position) {
@@ -88,13 +112,8 @@ public class CSV {
     this.addRecord(position, values);
   }
 
-  /**
-   * Returns a list with all the values of a column in the csv
-   *
-   * @param colName Column header name
-   */
   public List<String> colValues(String colName) {
-    List<String> values = new LinkedList<String>();
+    List<String> values = new ArrayList<>();
     for (CSVRecord record : this.records) {
       values.add(record.get(colName));
     }
@@ -165,10 +184,11 @@ public class CSV {
   }
 
   public static List<String> recordValues(CSVRecord record) {
-    List<String> values = new LinkedList<>();
+    List<String> values = new ArrayList<>();
     for (String value : record) {
       values.add(value);
     }
     return values;
   }
 }
+
