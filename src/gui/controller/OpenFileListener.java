@@ -1,6 +1,7 @@
-package gui;
+package gui.controller;
 
 import csv.CSV;
+import gui.model.CSVTableModel;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,7 @@
-package gui;
+package gui.view;
 
 import csv.CSV;
+import gui.controller.SendEmailListener;
 import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

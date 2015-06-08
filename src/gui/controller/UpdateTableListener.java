@@ -1,6 +1,7 @@
-package gui;
+package gui.controller;
 
 import csv.CSV;
+import gui.model.CSVTableModel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;

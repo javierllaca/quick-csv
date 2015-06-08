@@ -1,4 +1,4 @@
-package gui;
+package gui.view;
 
 import csv.CSV;
 import javax.swing.BoxLayout;
@@ -7,12 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JButton;
 
-public class EmailDialog extends JFrame {
+public class EmailView extends JFrame {
 
   private CSV csv;
   private JButton send;
 
-  public EmailDialog(CSV csv) {
+  public EmailView(CSV csv) {
     this.getContentPane().setLayout(
         new BoxLayout(
           this.getContentPane(),

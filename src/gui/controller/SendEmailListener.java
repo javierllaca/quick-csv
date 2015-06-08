@@ -1,4 +1,4 @@
-package gui;
+package gui.controller;
 
 import csv.CSV;
 import email.EmailClient;

@@ -1,6 +1,13 @@
-package gui;
+package gui.view;
 
 import csv.CSV;
+import gui.controller.AddRowListener;
+import gui.controller.EmailViewListener;
+import gui.controller.SaveFileListener;
+import gui.controller.UpdateTableListener;
+import gui.controller.DeleteRowListener;
+import gui.controller.OpenFileListener;
+import gui.model.CSVTableModel;
 import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JFileChooser;
@@ -31,7 +38,6 @@ public class TableView extends JFrame {
 
     this.add(new JScrollPane(table));
 
-    //this.addWindowListener(new ExitSaveListener(this.csv, path));
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     this.pack();
@@ -57,13 +63,13 @@ public class TableView extends JFrame {
     menuItem = new JMenuItem("Save As");
     menuItem.addActionListener(
         new SaveFileListener(
-          ((CSVTableModel) table.getModel()).getCSV(),
+          table,
           parent));
     menu.add(menuItem);
 
     menuItem = new JMenuItem("Send Email");
     menuItem.addActionListener(
-        new EmailDialogListener(
+        new EmailViewListener(
           table));
     menu.add(menuItem);
 

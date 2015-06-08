@@ -1,4 +1,4 @@
-package gui;
+package gui.model;
 
 import csv.CSV;
 import javax.swing.table.AbstractTableModel;
